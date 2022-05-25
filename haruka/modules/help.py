@@ -42,7 +42,7 @@ async def help_button(_client, query):
     mod_match = re.match(r"help_module\((.+?)\)", query.data)
     back_match = re.match(r"help_back", query.data)
     if mod_match:
-        module = mod_match.group(1)
+        module = mod_match[1]
         text = plate("help_module", tmp_lang, name=HELPABLE[module].__mod_name__)
         text += plate(HELPABLE[module].__help__, tmp_lang)
 

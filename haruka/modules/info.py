@@ -62,12 +62,13 @@ async def whois(client, message):
         "info_infotext",
         tmp_lang,
         user_id=user.id,
-        first_name=user.first_name if user.first_name else "",
-        last_name=user.last_name if user.last_name else "",
-        username=user.username if user.username else "",
+        first_name=user.first_name or "",
+        last_name=user.last_name or "",
+        username=user.username or "",
         last_online=last_online(user),
         seen_chats=0,
-        bio=desc if desc else plate("info_no_bio", tmp_lang),
+        bio=desc or plate("info_no_bio", tmp_lang),
     )
+
 
     await message.reply_text(info_text, disable_web_page_preview=True)

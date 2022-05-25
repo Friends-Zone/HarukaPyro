@@ -31,14 +31,11 @@ def command(
             regex='|'.join(flt.commands),
             bot_name=BotUsername,
         )
-        matches = re.search(re.compile(regex), text)
-        if matches:
-            message.command = [matches.group(2)]
-            for arg in shlex.split(matches.group(4).strip()):
-                message.command.append(arg)
-            return True
-        else:
+        if not (matches := re.search(re.compile(regex), text)):
             return False
+        message.command = [matches[2]]
+        message.command.extend(iter(shlex.split(matches[4].strip())))
+        return True
 
     commands = commands if type(commands) is list else [commands]
     commands = {c if case_sensitive else c.lower() for c in commands}

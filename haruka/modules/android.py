@@ -254,10 +254,11 @@ async def magisk(client, message):
     url = 'https://raw.githubusercontent.com/topjohnwu/magisk_files/'
     try:
         stable, beta, canary = await asyncio.gather(
-            cache.get(url + "master/stable.json"),
-            cache.get(url + "master/beta.json"),
-            cache.get(url + "canary/canary.json"),
+            cache.get(f"{url}master/stable.json"),
+            cache.get(f"{url}master/beta.json"),
+            cache.get(f"{url}canary/canary.json"),
         )
+
         if not stable and not beta and not canary:
             await message.reply(plate("android_err_api", tmp_lang))
             return
@@ -266,33 +267,31 @@ async def magisk(client, message):
             plate(
                 "android_magisk_msgtxt",
                 tmp_lang,
-                # Generics
                 uninstalltxt=plate("android_magisk_uninstaller", tmp_lang),
                 changelogtxt=plate("android_magisk_changelog", tmp_lang),
-                # Stable text
                 stablezip="ZIP v" + stable['magisk']['version'],
                 stablezipurl=stable['magisk']['link'],
                 stableapk="APK v" + stable['app']['version'],
                 stableapkurl=stable['app']['link'],
                 stableuninstallurl=stable['uninstaller']['link'],
                 stablechangelogurl=f"https://topjohnwu.github.io/Magisk/releases/{stable['magisk']['versionCode']}.html",
-                # Beta text
                 betazip="ZIP v" + beta['magisk']['version'],
                 betazipurl=beta['magisk']['link'],
                 betaapk="APK v" + beta['app']['version'],
                 betaapkurl=beta['app']['link'],
                 betauninstallurl=beta['uninstaller']['link'],
                 betachangelogurl=f"https://topjohnwu.github.io/Magisk/releases/{beta['magisk']['versionCode']}.html",
-                # Canary text
                 canaryzip="ZIP v" + canary['magisk']['version'],
-                canaryzipurl=url + "canary/canary/" + canary['magisk']['link'],
+                canaryzipurl=f"{url}canary/canary/" + canary['magisk']['link'],
                 canaryapk="APK v" + canary['app']['version'],
-                canaryapkurl=url + "canary/" + canary['app']['link'],
-                canaryuninstallurl=url + "canary/" + canary['uninstaller']['link'],
-                canarychangelogurl=url + "canary/" + canary['magisk']['note'],
+                canaryapkurl=f"{url}canary/" + canary['app']['link'],
+                canaryuninstallurl=f"{url}canary/"
+                + canary['uninstaller']['link'],
+                canarychangelogurl=f"{url}canary/" + canary['magisk']['note'],
             ),
             disable_web_page_preview=True,
         )
+
 
     except ClientConnectionError:
         await message.reply(plate("android_err_api", tmp_lang))

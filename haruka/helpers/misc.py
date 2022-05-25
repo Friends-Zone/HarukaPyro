@@ -13,30 +13,27 @@ class EqInlineKeyboardButton(InlineKeyboardButton):
 
 
 def paginate_modules(_page_n, module_dict, prefix, chat=None):
-    if not chat:
-        modules = sorted(
+    modules = (
+        sorted(
             [
                 EqInlineKeyboardButton(
                     x.__mod_name__,
-                    callback_data="{}_module({})".format(
-                        prefix, x.__mod_name__.lower()
-                    ),
+                    callback_data=f"{prefix}_module({chat},{x.__mod_name__.lower()})",
                 )
                 for x in module_dict.values()
             ]
         )
-    else:
-        modules = sorted(
+        if chat
+        else sorted(
             [
                 EqInlineKeyboardButton(
                     x.__mod_name__,
-                    callback_data="{}_module({},{})".format(
-                        prefix, chat, x.__mod_name__.lower()
-                    ),
+                    callback_data=f"{prefix}_module({x.__mod_name__.lower()})",
                 )
                 for x in module_dict.values()
             ]
         )
+    )
 
     pairs = []
     pair = []
@@ -77,11 +74,9 @@ def build_keyboard(buttons):
 
 
 def revert_buttons(buttons):
-    res = ""
-    for btn in buttons:
-        if btn.same_line:
-            res += "\n[{}](buttonurl://{}:same)".format(btn.name, btn.url)
-        else:
-            res += "\n[{}](buttonurl://{})".format(btn.name, btn.url)
-
-    return res
+    return "".join(
+        "\n[{}](buttonurl://{}:same)".format(btn.name, btn.url)
+        if btn.same_line
+        else "\n[{}](buttonurl://{})".format(btn.name, btn.url)
+        for btn in buttons
+    )
